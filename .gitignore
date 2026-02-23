@@ -5,3 +5,7 @@ dist/
 coverage/
 npm-debug.log
 uploads/
+/apk_guide.md
+/deployment_guide.md
+/frontend/android/
+.idea/
