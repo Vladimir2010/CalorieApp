@@ -1,0 +1,12 @@
+{
+    "appId": "com.calorieapp.app",
+    "appName": "CalorieApp",
+    "webDir": "dist",
+    "bundledWebRuntime": false,
+    "server": {
+        "cleartext": true,
+        "allowNavigation": [
+            "*"
+        ]
+    }
+}
