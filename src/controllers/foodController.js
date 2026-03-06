@@ -43,7 +43,7 @@ const getFoodById = async (req, res) => {
 // @access  Private
 const createFood = async (req, res) => {
     try {
-        const { name, brand, calories, protein, carbs, fat, servingSize } = req.body;
+        const { name, brand, calories, protein, carbs, fat, fiber, sugar, sodium, servingSize } = req.body;
 
         const food = new Food({
             name,
@@ -52,6 +52,9 @@ const createFood = async (req, res) => {
             protein,
             carbs,
             fat,
+            fiber,
+            sugar,
+            sodium,
             servingSize,
             isCustom: true,
             createdBy: req.user._id,
