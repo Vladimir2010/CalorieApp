@@ -1,0 +1,21 @@
+{
+    "name": "CalorieApp",
+    "short_name": "CalorieApp",
+    "description": "Smart food tracking with AI",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#020617",
+    "theme_color": "#10b981",
+    "icons": [
+        {
+            "src": "/icon.jpg",
+            "sizes": "192x192",
+            "type": "image/jpeg"
+        },
+        {
+            "src": "/icon.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg"
+        }
+    ]
+}

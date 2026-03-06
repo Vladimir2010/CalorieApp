@@ -5,6 +5,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Camera from './pages/Camera';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import History from './pages/History';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
                     <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
                     <Route path="/camera" element={isAuthenticated ? <Camera /> : <Navigate to="/login" />} />
                     <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+                    <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
+                    <Route path="/history" element={isAuthenticated ? <History /> : <Navigate to="/login" />} />
                 </Routes>
             </div>
         </Router>

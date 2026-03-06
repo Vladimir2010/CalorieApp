@@ -3,11 +3,14 @@ import api from '../api';
 import { motion } from 'framer-motion';
 import { Utensils, Zap, Flame, Droplets } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
+    const { t } = useTranslation();
     const [log, setLog] = useState(null);
     const [loading, setLoading] = useState(true);
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     useEffect(() => {
         fetchTodayLog();
@@ -28,9 +31,12 @@ const Home = () => {
     };
 
     const macroData = [
-        { name: 'Protein', value: log?.totals?.protein || 0, color: '#3b82f6' },
-        { name: 'Carbs', value: log?.totals?.carbs || 0, color: '#22c55e' },
-        { name: 'Fat', value: log?.totals?.fat || 0, color: '#f59e0b' }
+        { name: t('protein'), value: log?.totals?.protein || 0, color: '#3b82f6', unit: 'g' },
+        { name: t('carbs'), value: log?.totals?.carbs || 0, color: '#22c55e', unit: 'g' },
+        { name: t('fat'), value: log?.totals?.fat || 0, color: '#f59e0b', unit: 'g' },
+        { name: t('fiber'), value: log?.totals?.fiber || 0, color: '#8b5cf6', unit: 'g' },
+        { name: t('sugar'), value: log?.totals?.sugar || 0, color: '#ec4899', unit: 'g' },
+        { name: t('sodium'), value: log?.totals?.sodium || 0, color: '#64748b', unit: 'mg' }
     ];
 
     return (
@@ -40,7 +46,7 @@ const Home = () => {
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
                         CalorieApp
                     </h1>
-                    <p className="text-slate-400">Welcome back, Hero!</p>
+                    <p className="text-slate-400">{t('welcome_back')}</p>
                 </div>
                 <div className="w-12 h-12 rounded-full overflow-hidden border border-primary/30 shadow-lg shadow-primary/20">
                     <img src="/icon.jpg" alt="Icon" className="w-full h-full object-cover" />
@@ -55,7 +61,7 @@ const Home = () => {
             >
                 <div className="relative z-10 flex justify-between items-end">
                     <div>
-                        <span className="text-slate-400 text-sm font-medium uppercase tracking-widest">Total Intake</span>
+                        <span className="text-slate-400 text-sm font-medium uppercase tracking-widest">{t('total_intake')}</span>
                         <div className="flex items-baseline gap-2">
                             <h2 className="text-5xl font-black">{log?.totals?.calories || 0}</h2>
                             <span className="text-slate-400 font-medium">kcal</span>
@@ -72,7 +78,7 @@ const Home = () => {
                 {macroData.map((macro) => (
                     <div key={macro.name} className="glass-card p-4 flex flex-col items-center">
                         <span className="text-xs text-slate-400 mb-1">{macro.name}</span>
-                        <span className="text-lg font-bold">{macro.value}g</span>
+                        <span className="text-lg font-bold">{macro.value}{macro.unit}</span>
                         <div className="w-full h-1 bg-slate-800 rounded-full mt-2">
                             <div
                                 className="h-full rounded-full"
@@ -84,7 +90,7 @@ const Home = () => {
             </div>
 
             {/* Recent Meals */}
-            <h3 className="text-xl font-bold mb-4">Recent Meals</h3>
+            <h3 className="text-xl font-bold mb-4">{t('recent_meals')}</h3>
             <div className="space-y-4">
                 {log?.entries?.length > 0 ? (
                     log.entries.map((entry, i) => (
@@ -101,7 +107,7 @@ const Home = () => {
                                 </div>
                                 <div>
                                     <p className="font-semibold">{entry.foodName}</p>
-                                    <p className="text-xs text-slate-400 uppercase tracking-wider">{entry.mealType}</p>
+                                    <p className="text-xs text-slate-400 uppercase tracking-wider">{t(entry.mealType) || entry.mealType}</p>
                                 </div>
                             </div>
                             <p className="font-bold">+{entry.calories} kcal</p>
@@ -109,7 +115,7 @@ const Home = () => {
                     ))
                 ) : (
                     <div className="text-center p-8 bg-slate-900/50 rounded-3xl border border-dashed border-slate-700">
-                        <p className="text-slate-500">No meals logged today yet.</p>
+                        <p className="text-slate-500">{t('no_meals_today')}</p>
                     </div>
                 )}
             </div>

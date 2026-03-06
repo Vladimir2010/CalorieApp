@@ -16,7 +16,7 @@ const getDailyLog = async (req, res) => {
             res.json({
                 date,
                 entries: [],
-                totals: { calories: 0, protein: 0, carbs: 0, fat: 0 }
+                totals: { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sugar: 0, sodium: 0 }
             });
         }
     } catch (error) {
@@ -51,7 +51,10 @@ const addEntry = async (req, res) => {
             calories: Math.round(foodItem.calories * quantity),
             protein: Math.round(foodItem.protein * quantity),
             carbs: Math.round(foodItem.carbs * quantity),
-            fat: Math.round(foodItem.fat * quantity)
+            fat: Math.round(foodItem.fat * quantity),
+            fiber: Math.round((foodItem.fiber || 0) * quantity),
+            sugar: Math.round((foodItem.sugar || 0) * quantity),
+            sodium: Math.round((foodItem.sodium || 0) * quantity)
         };
 
         // 3. Find or Create DailyLog

@@ -4,11 +4,11 @@ const fs = require('fs');
 
 // Mock Database for Simulation
 const MOCK_PREDICTIONS = [
-    { name: 'Grilled Chicken Salad', calories: 350, protein: 30, carbs: 10, fat: 15 },
-    { name: 'Pepperoni Pizza', calories: 285, protein: 12, carbs: 36, fat: 10 },
-    { name: 'Avocado Toast', calories: 220, protein: 6, carbs: 20, fat: 18 },
-    { name: 'Salmon and Rice', calories: 500, protein: 40, carbs: 45, fat: 12 },
-    { name: 'Oatmeal with Berries', calories: 150, protein: 5, carbs: 27, fat: 3 }
+    { name: 'Grilled Chicken Salad', calories: 350, protein: 30, carbs: 10, fat: 15, fiber: 5, sugar: 2, sodium: 400 },
+    { name: 'Pepperoni Pizza', calories: 285, protein: 12, carbs: 36, fat: 10, fiber: 2, sugar: 4, sodium: 600 },
+    { name: 'Avocado Toast', calories: 220, protein: 6, carbs: 20, fat: 18, fiber: 8, sugar: 1, sodium: 300 },
+    { name: 'Salmon and Rice', calories: 500, protein: 40, carbs: 45, fat: 12, fiber: 4, sugar: 0, sodium: 350 },
+    { name: 'Oatmeal with Berries', calories: 150, protein: 5, carbs: 27, fat: 3, fiber: 6, sugar: 10, sodium: 10 }
 ];
 
 const analyzeImage = async (filePath) => {
@@ -37,7 +37,7 @@ const analyzeImage = async (filePath) => {
                             {
                                 role: "user",
                                 content: [
-                                    { type: "text", text: "Analyze this food image. Provide a JSON object with: name, calories, protein, carbs, fat. Format: {\"name\": \"...\", \"calories\": 0, \"protein\": 0, \"carbs\": 0, \"fat\": 0}. Return ONLY JSON." },
+                                    { type: "text", text: "Analyze this food image. Provide a JSON object with: name, calories, protein, carbs, fat, fiber, sugar, sodium. Format: {\"name\": \"...\", \"calories\": 0, \"protein\": 0, \"carbs\": 0, \"fat\": 0, \"fiber\": 0, \"sugar\": 0, \"sodium\": 0}. Return ONLY JSON." },
                                     {
                                         type: "image_url",
                                         image_url: { url: `data:image/jpeg;base64,${base64Image}` },
@@ -85,7 +85,7 @@ const analyzeImage = async (filePath) => {
             const imageData = {
                 inlineData: { data: imageBuffer.toString("base64"), mimeType: "image/jpeg" },
             };
-            const prompt = "Analyze this food image. Provide a JSON object with: name, calories, protein, carbs, fat. Return ONLY JSON.";
+            const prompt = "Analyze this food image. Provide a JSON object with: name, calories, protein, carbs, fat, fiber, sugar, sodium. Format: {\"name\": \"...\", \"calories\": 0, \"protein\": 0, \"carbs\": 0, \"fat\": 0, \"fiber\": 0, \"sugar\": 0, \"sodium\": 0}. Return ONLY JSON.";
 
             for (const modelName of modelsToTry) {
                 try {

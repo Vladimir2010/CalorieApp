@@ -26,6 +26,18 @@ const foodSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    fiber: {
+        type: Number,
+        default: 0
+    },
+    sugar: {
+        type: Number,
+        default: 0
+    },
+    sodium: {
+        type: Number,
+        default: 0
+    },
     servingSize: {
         amount: { type: Number, default: 100 },
         unit: { type: String, default: 'g' } // g, ml, slice, etc.

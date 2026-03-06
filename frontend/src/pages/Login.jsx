@@ -3,8 +3,10 @@ import api from '../api';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ const Login = () => {
                     <div className="text-center mb-8">
                         <img src="/icon.jpg" alt="CalorieApp Logo" className="w-20 h-20 mx-auto mb-4 rounded-3xl shadow-lg" />
                         <h1 className="text-4xl font-black mb-2 text-primary">CalorieApp</h1>
-                        <p className="text-slate-400">Track your life, one meal at a time.</p>
+                        <p className="text-slate-400">{t('track_life')}</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -44,7 +46,7 @@ const Login = () => {
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
                             <input
                                 type="email"
-                                placeholder="Email Address"
+                                placeholder={t('email_address')}
                                 className="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 focus:border-primary outline-none transition-all"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -56,7 +58,7 @@ const Login = () => {
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
                             <input
                                 type="password"
-                                placeholder="Password"
+                                placeholder={t('password')}
                                 className="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 focus:border-primary outline-none transition-all"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -68,16 +70,16 @@ const Login = () => {
                             disabled={loading}
                             className="w-full premium-gradient py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
                         >
-                            {loading ? 'Entering...' : (
+                            {loading ? t('signing_in') : (
                                 <>
-                                    Sign In <ArrowRight size={20} />
+                                    {t('sign_in')} <ArrowRight size={20} />
                                 </>
                             )}
                         </button>
                     </form>
 
                     <p className="text-center mt-8 text-slate-400">
-                        New here? <Link to="/register" className="text-primary font-bold">Create Account</Link>
+                        {t('new_here')} <Link to="/register" className="text-primary font-bold">{t('create_account')}</Link>
                     </p>
                 </motion.div>
             </div>

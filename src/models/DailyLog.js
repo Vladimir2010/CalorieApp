@@ -26,13 +26,19 @@ const dailyLogSchema = new mongoose.Schema({
         calories: { type: Number },
         protein: { type: Number },
         carbs: { type: Number },
-        fat: { type: Number }
+        fat: { type: Number },
+        fiber: { type: Number },
+        sugar: { type: Number },
+        sodium: { type: Number }
     }],
     totals: {
         calories: { type: Number, default: 0 },
         protein: { type: Number, default: 0 },
         carbs: { type: Number, default: 0 },
-        fat: { type: Number, default: 0 }
+        fat: { type: Number, default: 0 },
+        fiber: { type: Number, default: 0 },
+        sugar: { type: Number, default: 0 },
+        sodium: { type: Number, default: 0 }
     }
 }, {
     timestamps: true
@@ -48,8 +54,11 @@ dailyLogSchema.pre('save', function () {
         acc.protein += entry.protein || 0;
         acc.carbs += entry.carbs || 0;
         acc.fat += entry.fat || 0;
+        acc.fiber += entry.fiber || 0;
+        acc.sugar += entry.sugar || 0;
+        acc.sodium += entry.sodium || 0;
         return acc;
-    }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+    }, { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sugar: 0, sodium: 0 });
 });
 
 module.exports = mongoose.model('DailyLog', dailyLogSchema);

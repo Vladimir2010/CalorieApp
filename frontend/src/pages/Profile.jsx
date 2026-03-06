@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Settings, LogOut, ChevronRight, Save, X, Activity } from 'lucide-react';
+import { User, Settings, LogOut, ChevronRight, Save, X, Activity, Globe } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
+    const navigate = useNavigate();
+    const { t } = useTranslation();
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -24,7 +28,7 @@ const Profile = () => {
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get('/api/auth/me', {
+            const res = await api.get('/api/auth/me', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUser(res.data);
@@ -80,7 +84,7 @@ const Profile = () => {
 
     return (
         <div className="p-6 max-w-lg mx-auto pb-32">
-            <h1 className="text-3xl font-bold mb-8">My Profile</h1>
+            <h1 className="text-3xl font-bold mb-8">{t('my_profile')}</h1>
 
             <div className="flex items-center gap-6 mb-10">
                 <div className="w-24 h-24 premium-gradient rounded-3xl flex items-center justify-center shadow-lg shadow-primary/20">
@@ -115,30 +119,43 @@ const Profile = () => {
                                     <Settings size={20} />
                                 </div>
                                 <div>
-                                    <p className="font-bold">Edit Settings</p>
-                                    <p className="text-xs text-slate-500">Update goals, weight, height</p>
+                                    <p className="font-bold">{t('edit_settings')}</p>
+                                    <p className="text-xs text-slate-500">{t('edit_settings_desc')}</p>
+                                </div>
+                            </div>
+                            <ChevronRight size={20} className="text-slate-700 group-hover:text-white transition-colors" />
+                        </div>
+
+                        <div className="glass-card p-6 flex items-center justify-between group cursor-pointer" onClick={() => navigate('/settings')}>
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-2xl">
+                                    <Globe size={20} />
+                                </div>
+                                <div>
+                                    <p className="font-bold">{t('server_settings')}</p>
+                                    <p className="text-xs text-slate-500">{t('server_settings_desc')}</p>
                                 </div>
                             </div>
                             <ChevronRight size={20} className="text-slate-700 group-hover:text-white transition-colors" />
                         </div>
 
                         <div className="glass-card p-8">
-                            <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-6">Current Metrics</p>
+                            <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-6">{t('current_metrics')}</p>
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
-                                    <p className="text-xs text-slate-400 mb-1">Weight</p>
+                                    <p className="text-xs text-slate-400 mb-1">{t('weight')}</p>
                                     <p className="text-xl font-black">{user?.profile?.weight || '--'} <span className="text-sm font-normal text-slate-500">kg</span></p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-slate-400 mb-1">Height</p>
+                                    <p className="text-xs text-slate-400 mb-1">{t('height')}</p>
                                     <p className="text-xl font-black">{user?.profile?.height || '--'} <span className="text-sm font-normal text-slate-500">cm</span></p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-slate-400 mb-1">Age</p>
+                                    <p className="text-xs text-slate-400 mb-1">{t('age')}</p>
                                     <p className="text-xl font-black">{user?.profile?.age || '--'} <span className="text-sm font-normal text-slate-500">yrs</span></p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-slate-400 mb-1">Daily Goal</p>
+                                    <p className="text-xs text-slate-400 mb-1">{t('daily_goal')}</p>
                                     <p className="text-xl font-black text-primary">{user?.goals?.dailyCalories || '2000'} <span className="text-sm font-normal text-slate-500">kcal</span></p>
                                 </div>
                             </div>
@@ -150,8 +167,8 @@ const Profile = () => {
                                     <LogOut size={20} />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-red-500">Log Out</p>
-                                    <p className="text-xs text-slate-500">Securely exit your account</p>
+                                    <p className="font-bold text-red-500">{t('logout')}</p>
+                                    <p className="text-xs text-slate-500">{t('logout_desc')}</p>
                                 </div>
                             </div>
                             <ChevronRight size={20} className="text-slate-700 group-hover:text-white transition-colors" />
@@ -166,7 +183,7 @@ const Profile = () => {
                         className="glass-card p-8 space-y-6"
                     >
                         <div className="flex justify-between items-center mb-4">
-                            <h3 className="font-black uppercase tracking-widest text-xs text-primary">Edit Settings</h3>
+                            <h3 className="font-black uppercase tracking-widest text-xs text-primary">{t('edit_settings')}</h3>
                             <button type="button" onClick={() => setIsEditing(false)} className="text-slate-500 hover:text-white">
                                 <X size={20} />
                             </button>
@@ -174,7 +191,7 @@ const Profile = () => {
 
                         <div className="space-y-4">
                             <div>
-                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">Username</label>
+                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('username')}</label>
                                 <input
                                     type="text"
                                     value={formData.username}
@@ -184,7 +201,7 @@ const Profile = () => {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">Age</label>
+                                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('age')}</label>
                                     <input
                                         type="number"
                                         value={formData.age}
@@ -193,7 +210,7 @@ const Profile = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">Weight (kg)</label>
+                                    <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('weight')} (kg)</label>
                                     <input
                                         type="number"
                                         value={formData.weight}
@@ -203,7 +220,7 @@ const Profile = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">Height (cm)</label>
+                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('height')} (cm)</label>
                                 <input
                                     type="number"
                                     value={formData.height}
@@ -212,7 +229,7 @@ const Profile = () => {
                                 />
                             </div>
                             <div>
-                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">Daily Calorie Goal</label>
+                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('daily_goal')}</label>
                                 <input
                                     type="number"
                                     value={formData.dailyCalories}
@@ -227,7 +244,7 @@ const Profile = () => {
                             disabled={loading}
                             className="w-full premium-gradient p-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                         >
-                            {loading ? 'Saving...' : <><Save size={20} /> Save Changes</>}
+                            {loading ? t('saving') : <><Save size={20} /> {t('save_changes')}</>}
                         </button>
 
                         <button
@@ -235,7 +252,7 @@ const Profile = () => {
                             onClick={() => setIsEditing(false)}
                             className="w-full text-slate-500 text-xs font-bold py-2 mt-2"
                         >
-                            Cancel
+                            {t('cancel')}
                         </button>
                     </motion.form>
                 )}

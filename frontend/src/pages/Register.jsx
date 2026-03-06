@@ -3,8 +3,10 @@ import api from '../api';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { User, Mail, Lock, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
+    const { t } = useTranslation();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -37,7 +39,7 @@ const Register = () => {
                     <div className="text-center mb-8">
                         <img src="/icon.jpg" alt="CalorieApp Logo" className="w-20 h-20 mx-auto mb-4 rounded-3xl shadow-lg" />
                         <h1 className="text-4xl font-black mb-2 text-primary">CalorieApp</h1>
-                        <p className="text-slate-400">Join the revolution of smart nutrition.</p>
+                        <p className="text-slate-400">{t('join_revolution')}</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -45,7 +47,7 @@ const Register = () => {
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
                             <input
                                 type="text"
-                                placeholder="Username"
+                                placeholder={t('username')}
                                 className="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 focus:border-primary outline-none transition-all"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
@@ -57,7 +59,7 @@ const Register = () => {
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
                             <input
                                 type="email"
-                                placeholder="Email Address"
+                                placeholder={t('email_address')}
                                 className="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 focus:border-primary outline-none transition-all"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -69,7 +71,7 @@ const Register = () => {
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
                             <input
                                 type="password"
-                                placeholder="Password"
+                                placeholder={t('password')}
                                 className="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 focus:border-primary outline-none transition-all"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -81,16 +83,16 @@ const Register = () => {
                             disabled={loading}
                             className="w-full premium-gradient py-4 rounded-2xl font-bold flex items-center justify-center gap-2"
                         >
-                            {loading ? 'Creating...' : (
+                            {loading ? t('creating') : (
                                 <>
-                                    Create Account <ArrowRight size={20} />
+                                    {t('create_account')} <ArrowRight size={20} />
                                 </>
                             )}
                         </button>
                     </form>
 
                     <p className="text-center mt-8 text-slate-400">
-                        Already have an account? <Link to="/login" className="text-primary font-bold">Login</Link>
+                        {t('already_have_account')} <Link to="/login" className="text-primary font-bold">{t('login')}</Link>
                     </p>
                 </motion.div>
             </div>

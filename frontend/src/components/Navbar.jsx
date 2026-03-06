@@ -1,13 +1,16 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Camera, User, BarChart2 } from 'lucide-react';
+import { Home, Camera, User, Calendar } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
     const location = useLocation();
+    const { t } = useTranslation();
 
     const navItems = [
-        { path: '/', icon: Home, label: 'Home' },
-        { path: '/camera', icon: Camera, label: 'Scan' },
-        { path: '/profile', icon: User, label: 'Profile' }
+        { path: '/', icon: Home, label: t('home') },
+        { path: '/history', icon: Calendar, label: t('history') },
+        { path: '/camera', icon: Camera, label: t('scan') },
+        { path: '/profile', icon: User, label: t('profile') }
     ];
 
     return (
