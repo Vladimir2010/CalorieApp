@@ -9,11 +9,13 @@ const Home = () => {
     const { t } = useTranslation();
     const [log, setLog] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [username, setUsername] = useState('');
     const now = new Date();
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     useEffect(() => {
         fetchTodayLog();
+        fetchUser();
     }, []);
 
     const fetchTodayLog = async () => {
@@ -27,6 +29,18 @@ const Home = () => {
             console.error(err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchUser = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await api.get('/api/auth/me', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setUsername(res.data.username || '');
+        } catch (err) {
+            console.error(err);
         }
     };
 
@@ -46,7 +60,7 @@ const Home = () => {
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
                         CalorieApp
                     </h1>
-                    <p className="text-slate-400">{t('welcome_back')}</p>
+                    <p className="text-slate-400">{username ? `${t('welcome_back_name')} ${username}!` : t('welcome_back')}</p>
                 </div>
                 <div className="w-12 h-12 rounded-full overflow-hidden border border-primary/30 shadow-lg shadow-primary/20">
                     <img src="/icon.jpg" alt="Icon" className="w-full h-full object-cover" />
@@ -65,6 +79,15 @@ const Home = () => {
                         <div className="flex items-baseline gap-2">
                             <h2 className="text-5xl font-black">{log?.totals?.calories || 0}</h2>
                             <span className="text-slate-400 font-medium">kcal</span>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <span className="text-slate-500 text-xs font-bold uppercase tracking-widest block">{t('total_grams')}</span>
+                        <div className="flex items-baseline gap-1 justify-end">
+                            <span className="text-2xl font-black text-slate-300">
+                                {((log?.totals?.protein || 0) + (log?.totals?.carbs || 0) + (log?.totals?.fat || 0) + (log?.totals?.fiber || 0))}
+                            </span>
+                            <span className="text-slate-500 font-medium text-sm">g</span>
                         </div>
                     </div>
                 </div>

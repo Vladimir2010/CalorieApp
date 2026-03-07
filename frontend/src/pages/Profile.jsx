@@ -18,8 +18,32 @@ const Profile = () => {
         age: '',
         height: '',
         weight: '',
+        gender: 'male',
+        activityLevel: 'sedentary',
         dailyCalories: ''
     });
+
+    const activityMultipliers = {
+        sedentary: 1.2,
+        light: 1.375,
+        moderate: 1.55,
+        active: 1.725,
+        very_active: 1.9
+    };
+
+    const calcBMR = (data) => {
+        const age = Number(data.age);
+        const h = Number(data.height);
+        const w = Number(data.weight);
+        if (!age || !h || !w) return null;
+        let bmr;
+        if (data.gender === 'female') {
+            bmr = 447.593 + (9.247 * w) + (3.098 * h) - (4.330 * age);
+        } else {
+            bmr = 88.362 + (13.397 * w) + (4.799 * h) - (5.677 * age);
+        }
+        return Math.round(bmr * (activityMultipliers[data.activityLevel] || 1.2));
+    };
 
     useEffect(() => {
         fetchProfile();
@@ -37,6 +61,8 @@ const Profile = () => {
                 age: res.data.profile?.age || '',
                 height: res.data.profile?.height || '',
                 weight: res.data.profile?.weight || '',
+                gender: res.data.profile?.gender || 'male',
+                activityLevel: res.data.profile?.activityLevel || 'sedentary',
                 dailyCalories: res.data.goals?.dailyCalories || '2000'
             });
         } catch (err) {
@@ -55,7 +81,9 @@ const Profile = () => {
                 profile: {
                     age: Number(formData.age),
                     height: Number(formData.height),
-                    weight: Number(formData.weight)
+                    weight: Number(formData.weight),
+                    gender: formData.gender,
+                    activityLevel: formData.activityLevel
                 },
                 goals: {
                     dailyCalories: Number(formData.dailyCalories)
@@ -199,13 +227,40 @@ const Profile = () => {
                                     className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-bold"
                                 />
                             </div>
+
+                            {/* Gender */}
+                            <div>
+                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('gender')}</label>
+                                <div className="flex gap-3">
+                                    {['male', 'female'].map(g => (
+                                        <button
+                                            key={g}
+                                            type="button"
+                                            onClick={() => {
+                                                const updated = { ...formData, gender: g };
+                                                const bmr = calcBMR(updated);
+                                                setFormData({ ...updated, dailyCalories: bmr ? String(bmr) : updated.dailyCalories });
+                                            }}
+                                            className={`flex-1 py-3 rounded-2xl font-bold text-sm transition-all ${formData.gender === g ? 'bg-primary text-white' : 'bg-slate-800 text-slate-400'
+                                                }`}
+                                        >
+                                            {g === 'male' ? `♂ ${t('male')}` : `♀ ${t('female')}`}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('age')}</label>
                                     <input
                                         type="number"
                                         value={formData.age}
-                                        onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                                        onChange={(e) => {
+                                            const updated = { ...formData, age: e.target.value };
+                                            const bmr = calcBMR(updated);
+                                            setFormData({ ...updated, dailyCalories: bmr ? String(bmr) : updated.dailyCalories });
+                                        }}
                                         className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-bold"
                                     />
                                 </div>
@@ -214,28 +269,70 @@ const Profile = () => {
                                     <input
                                         type="number"
                                         value={formData.weight}
-                                        onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                                        onChange={(e) => {
+                                            const updated = { ...formData, weight: e.target.value };
+                                            const bmr = calcBMR(updated);
+                                            setFormData({ ...updated, dailyCalories: bmr ? String(bmr) : updated.dailyCalories });
+                                        }}
                                         className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-bold"
                                     />
                                 </div>
                             </div>
+
                             <div>
                                 <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('height')} (cm)</label>
                                 <input
                                     type="number"
                                     value={formData.height}
-                                    onChange={(e) => setFormData({ ...formData, height: e.target.value })}
+                                    onChange={(e) => {
+                                        const updated = { ...formData, height: e.target.value };
+                                        const bmr = calcBMR(updated);
+                                        setFormData({ ...updated, dailyCalories: bmr ? String(bmr) : updated.dailyCalories });
+                                    }}
                                     className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-bold"
                                 />
                             </div>
+
+                            {/* Activity Level */}
                             <div>
-                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('daily_goal')}</label>
+                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">{t('activity_level')}</label>
+                                <select
+                                    value={formData.activityLevel}
+                                    onChange={(e) => {
+                                        const updated = { ...formData, activityLevel: e.target.value };
+                                        const bmr = calcBMR(updated);
+                                        setFormData({ ...updated, dailyCalories: bmr ? String(bmr) : updated.dailyCalories });
+                                    }}
+                                    className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-bold"
+                                >
+                                    <option value="sedentary">{t('sedentary')}</option>
+                                    <option value="light">{t('light_active')}</option>
+                                    <option value="moderate">{t('moderate_active')}</option>
+                                    <option value="active">{t('active')}</option>
+                                    <option value="very_active">{t('very_active')}</option>
+                                </select>
+                            </div>
+
+                            {/* Calorie Goal with BMR hint */}
+                            <div>
+                                <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">
+                                    {t('daily_goal')} {calcBMR(formData) && <span className="text-primary">({t('bmr_calculated')}: {calcBMR(formData)} kcal)</span>}
+                                </label>
                                 <input
                                     type="number"
                                     value={formData.dailyCalories}
                                     onChange={(e) => setFormData({ ...formData, dailyCalories: e.target.value })}
                                     className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-bold text-primary"
                                 />
+                                {calcBMR(formData) && Number(formData.dailyCalories) !== calcBMR(formData) && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, dailyCalories: String(calcBMR(formData)) })}
+                                        className="text-xs text-primary mt-2 ml-4 font-bold hover:underline"
+                                    >
+                                        ↺ {t('use_calculated')}
+                                    </button>
+                                )}
                             </div>
                         </div>
 

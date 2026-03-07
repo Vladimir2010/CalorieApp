@@ -92,71 +92,74 @@ const Settings = () => {
                 </select>
             </motion.div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="glass-card p-8"
-            >
-                <div className="flex items-center gap-4 mb-6">
-                    <div className="p-3 bg-primary/10 text-primary rounded-2xl">
-                        <Globe size={24} />
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-bold">API Network</h2>
-                    </div>
-                </div>
-
-                <div className="space-y-6">
-                    <div>
-                        <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">
-                            {t('api_base_url')}
-                        </label>
-                        <input
-                            type="text"
-                            value={serverUrl}
-                            onChange={(e) => setServerUrl(e.target.value)}
-                            placeholder="http://192.168.1.X:5000"
-                            className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-mono text-sm"
-                        />
+            {/* API URL section hidden for online mode - keep functionality but hide UI */}
+            <div className="hidden">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="glass-card p-8"
+                >
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="p-3 bg-primary/10 text-primary rounded-2xl">
+                            <Globe size={24} />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold">API Network</h2>
+                        </div>
                     </div>
 
-                    {message && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className={`p-4 rounded-2xl text-sm font-bold border ${isError
-                                ? 'bg-red-500/10 text-red-400 border-red-500/30'
-                                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                                } flex items-start gap-3`}
-                        >
-                            {isError ? <AlertCircle size={18} className="shrink-0" /> : <Save size={18} className="shrink-0" />}
-                            <span>{message}</span>
-                        </motion.div>
-                    )}
+                    <div className="space-y-6">
+                        <div>
+                            <label className="text-[10px] uppercase font-bold text-slate-500 ml-4 mb-2 block">
+                                {t('api_base_url')}
+                            </label>
+                            <input
+                                type="text"
+                                value={serverUrl}
+                                onChange={(e) => setServerUrl(e.target.value)}
+                                placeholder="http://192.168.1.X:5000"
+                                className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-mono text-sm"
+                            />
+                        </div>
 
-                    <div className="grid grid-cols-2 gap-4 pt-4">
-                        <button
-                            onClick={handleSave}
-                            className="premium-gradient p-4 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
-                        >
-                            <Save size={18} /> {t('save_settings')}
-                        </button>
-                        <button
-                            onClick={handleReset}
-                            className="bg-slate-800 hover:bg-slate-700 p-4 rounded-2xl font-black uppercase text-[10px] sm:text-xs tracking-widest flex items-center justify-center gap-2 transition-all"
-                        >
-                            <RotateCcw size={18} /> {t('reset_settings')}
-                        </button>
+                        {message && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className={`p-4 rounded-2xl text-sm font-bold border ${isError
+                                    ? 'bg-red-500/10 text-red-400 border-red-500/30'
+                                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                                    } flex items-start gap-3`}
+                            >
+                                {isError ? <AlertCircle size={18} className="shrink-0" /> : <Save size={18} className="shrink-0" />}
+                                <span>{message}</span>
+                            </motion.div>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-4 pt-4">
+                            <button
+                                onClick={handleSave}
+                                className="premium-gradient p-4 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+                            >
+                                <Save size={18} /> {t('save_settings')}
+                            </button>
+                            <button
+                                onClick={handleReset}
+                                className="bg-slate-800 hover:bg-slate-700 p-4 rounded-2xl font-black uppercase text-[10px] sm:text-xs tracking-widest flex items-center justify-center gap-2 transition-all"
+                            >
+                                <RotateCcw size={18} /> {t('reset_settings')}
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </motion.div>
+                </motion.div>
 
-            <div className="mt-12 p-6 bg-slate-900/50 rounded-3xl border border-dashed border-slate-800 text-center">
-                <p className="text-xs text-slate-500 uppercase font-black tracking-widest mb-4">Diagnostics</p>
-                <div className="text-[10px] space-y-2 text-slate-500 font-mono">
-                    <p>Current: {serverUrl}</p>
-                    <p>Build Default: {defaultUrl || 'None'}</p>
+                <div className="mt-12 p-6 bg-slate-900/50 rounded-3xl border border-dashed border-slate-800 text-center">
+                    <p className="text-xs text-slate-500 uppercase font-black tracking-widest mb-4">Diagnostics</p>
+                    <div className="text-[10px] space-y-2 text-slate-500 font-mono">
+                        <p>Current: {serverUrl}</p>
+                        <p>Build Default: {defaultUrl || 'None'}</p>
+                    </div>
                 </div>
             </div>
         </div>

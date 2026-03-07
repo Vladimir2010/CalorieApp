@@ -11,6 +11,8 @@ const Camera = () => {
     const [preview, setPreview] = useState(null);
     const [analyzing, setAnalyzing] = useState(false);
     const [result, setResult] = useState(null);
+    const [baseResult, setBaseResult] = useState(null); // original AI result (base 100g)
+    const [grams, setGrams] = useState(100);
     const [mealType, setMealType] = useState('lunch');
     const fileInputRef = useRef(null);
 
@@ -37,12 +39,32 @@ const Camera = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setResult(res.data.data);
+            const data = res.data.data;
+            setBaseResult(data); // save original base values
+            setGrams(100);
+            setResult(data); // display as-is (base is 100g)
         } catch (err) {
             alert('Analysis failed: ' + (err.response?.data?.message || 'Check connection'));
         } finally {
             setAnalyzing(false);
         }
+    };
+
+    const handleGramsChange = (newGrams) => {
+        const g = parseFloat(newGrams) || 0;
+        setGrams(g);
+        if (!baseResult) return;
+        const ratio = g / 100;
+        setResult({
+            ...baseResult,
+            calories: Math.round(baseResult.calories * ratio),
+            protein: Math.round(baseResult.protein * ratio),
+            carbs: Math.round(baseResult.carbs * ratio),
+            fat: Math.round(baseResult.fat * ratio),
+            fiber: Math.round((baseResult.fiber || 0) * ratio),
+            sugar: Math.round((baseResult.sugar || 0) * ratio),
+            sodium: Math.round((baseResult.sodium || 0) * ratio),
+        });
     };
 
     const handleConfirm = async () => {
@@ -51,14 +73,9 @@ const Camera = () => {
             const now = new Date();
             const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-            // First, we might need to search for this food in our DB or the AI provides macros.
-            // Our backend 'addEntry' expects a foodId. 
-            // IMPROVEMENT: If AI returns a new food, we should probably create it or our backend should handle 'name' directly.
-            // For now, let's assume we create a 'temp' food or use a general 'AI Detected' food ID.
-            // SIMPLIFICATION for Demo: Create the food first.
-
+            const ratio = grams / 100;
             const foodRes = await api.post('/api/foods', {
-                name: result.name,
+                name: `${result.name} (${grams}g)`,
                 calories: result.calories,
                 protein: result.protein || 0,
                 carbs: result.carbs || 0,
@@ -66,7 +83,7 @@ const Camera = () => {
                 fiber: result.fiber || 0,
                 sugar: result.sugar || 0,
                 sodium: result.sodium || 0,
-                servingSize: { amount: 1, unit: 'portion' }
+                servingSize: { amount: grams, unit: 'g' }
             }, { headers: { Authorization: `Bearer ${token}` } });
 
             await api.post('/api/logs', {
@@ -87,7 +104,9 @@ const Camera = () => {
             setImage(null);
             setPreview(null);
             setResult(null);
-            alert('Success! Food added to your log.');
+            setBaseResult(null);
+            setGrams(100);
+            alert(t('success_added'));
         } catch (err) {
             alert('Failed to log: ' + err.message);
         }
@@ -172,6 +191,22 @@ const Camera = () => {
                         </div>
                         <div className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-bold">
                             {result.calories} kcal
+                        </div>
+                    </div>
+
+                    {/* Grams input */}
+                    <div className="mb-5">
+                        <label className="text-xs text-slate-500 uppercase font-bold block mb-2">{t('grams_label')}</label>
+                        <div className="flex items-center gap-3">
+                            <input
+                                type="number"
+                                min="1"
+                                max="2000"
+                                value={grams}
+                                onChange={(e) => handleGramsChange(e.target.value)}
+                                className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 focus:outline-none focus:border-primary transition-all font-bold text-lg text-primary"
+                            />
+                            <span className="font-bold text-slate-400 text-sm">g</span>
                         </div>
                     </div>
 

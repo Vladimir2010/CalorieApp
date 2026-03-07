@@ -111,8 +111,16 @@ const History = () => {
                 >
                     <div className="flex justify-between items-end mb-6">
                         <h3 className="text-xl font-bold capitalize">{selectedDate.toLocaleDateString(i18n.language === 'bg' ? 'bg-BG' : 'en-US', { weekday: 'short', day: 'numeric', month: 'long' })}</h3>
-                        <div className="text-primary font-bold text-xl flex items-center gap-1">
-                            <Flame size={20} /> {log?.totals?.calories || 0} kcal
+                        <div className="flex items-center gap-4">
+                            <div className="text-right">
+                                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest block">{t('total_grams')}</span>
+                                <span className="font-black text-slate-300 text-lg">
+                                    {((log?.totals?.protein || 0) + (log?.totals?.carbs || 0) + (log?.totals?.fat || 0) + (log?.totals?.fiber || 0))}g
+                                </span>
+                            </div>
+                            <div className="text-primary font-bold text-xl flex items-center gap-1">
+                                <Flame size={20} /> {log?.totals?.calories || 0} kcal
+                            </div>
                         </div>
                     </div>
 
