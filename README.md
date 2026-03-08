@@ -1,94 +1,126 @@
-# Calorie Tracking AI Application
+# CalorieApp
 
-## 📌 Project Overview
-A professional-grade backend for a Calorie Tracking Application designed for serious academic evaluation. This system leverages Node.js, Express, and MongoDB to provide clean, scalable architecture for tracking nutrition. It features **AI-powered Food Recognition** (simulated for demonstration, ready for OpenAI Vision) to simplify user data entry.
+Уеб приложение за проследяване на хранителен прием с изкуствен интелект. Снимаш ястието, AI разпознава какво е и автоматично записва хранителните стойности.
 
-## 🚀 Key Features
+## Технологии
 
-### 1. Secure User Management
-- **Security**: Passwords hashed with `bcrypt`. Authentication via `JWT` (JSON Web Tokens).
-- **Profile**: Stores user biometrics (height, weight, age) and automatically calculates nutritional goals.
-
-### 2. Comprehensive Food Database
-- **Search**: Fuzzy search capabilities for finding foods.
-- **Custom Foods**: Users can contribute their own food items.
-- **Detailed Macros**: Tracks Protein, Carbs, and Fat alongside Calories.
-
-### 3. AI Food Recognition
-- **Dual-Mode System**:
-    - **Simulation**: Instantly runnable demo mode returning realistic mock data.
-    - **Production**: Configurable integration with OpenAI GPT-4 Vision API.
-- **Flow**: User uploads image -> System analyzes -> Returns Estimated Name & Calories -> User Confirms.
-
-### 4. Daily Tracking & Analytics
-- **Daily Logs**: Aggregates meals by day.
-- **Real-time Totals**: Automatically calculates daily intake against goals.
-- **Analytics**: Weekly and Monthly statistical rollups.
-
-## 🛠️ Architecture
-
-### Tech Stack
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: MongoDB (with Mongoose ODM)
-- **Validation**: Joi / Manual Checks
-- **File Handling**: Multer (Disk Storage)
-
-### Modular Folder Structure
-```
-src/
-├── config/         # Database and Env configuration
-├── controllers/    # Request handling logic
-├── middlewares/    # Auth and Error handling
-├── models/         # Mongoose Schemas (User, Food, Log, ImageRecognition)
-├── routes/         # API Endpoint definitions
-├── services/       # Business logic (AI Service)
-└── utils/          # Helpers (Multer config)
-```
-
-## 🧠 Database Schema (ER Concept)
-- **User**: 1-to-Many -> **DailyLog**
-- **User**: 1-to-Many -> **ImageRecognition**
-- **DailyLog**: Embeds -> **Entries** (referencing **Food**)
-
-## 🤖 AI Implementation Details
-The `aiService.js` implements a Strategy Pattern. It checks for the presence of `AI_API_KEY`.
-- **If Present**: It sends the image (Base64) to OpenAI API, prompting a strict JSON response with nutritional estimates.
-- **If Absent**: It falls back to a deterministic simulation, returning a random selection from a predefined nutritious menu (e.g., "Grilled Chicken Salad", "Avocado Toast") with confidence scores.
-**Limitations**: Current AI models estimate portion sizes based on visual volume, which can vary by density. This is noted in the `confidence` score.
-
-## 🔧 Setup & Installation
-
-1.  **Install Dependencies**:
-    ```bash
-    npm install
-    ```
-2.  **Environment Variables**:
-    Create `.env` file (see `.env.example` logic or use provided default):
-    ```
-    MONGO_URI=mongodb://localhost:27017/calorie-app
-    JWT_SECRET=your_jwt_secret
-    # AI_API_KEY=sk-... (Optional)
-    ```
-3.  **Run Server**:
-    ```bash
-    npm run dev
-    ```
-    Server runs on `http://localhost:5000`.
-
-## 📡 API Endpoints 
-
-### Auth
-- `POST /api/auth/register` - Create account
-- `POST /api/auth/login` - Get Token
-
-### Food & Logs
-- `GET /api/foods/search?query=...` - Find food
-- `POST /api/logs` - Add entry
-- `GET /api/logs/:date` - View specific day
-
-### AI
-- `POST /api/ai/analyze` - Upload image (form-data: `image`), returns detection.
+- **Frontend:** React.js, Vite, TailwindCSS
+- **Backend:** Node.js, Express.js
+- **База данни:** MongoDB (Atlas)
+- **AI:** Groq API (Llama 4 Vision), Google Gemini API
 
 ---
-**Created for Academic Olympiad Evaluation**
+
+## Изисквания
+
+Преди да стартираш проекта, трябва да имаш инсталирано:
+
+- [Node.js](https://nodejs.org/) (версия 18 или по-нова)
+- npm (идва заедно с Node.js)
+- Акаунт в [MongoDB Atlas](https://www.mongodb.com/atlas) (безплатен)
+- API ключ от [Groq](https://console.groq.com/) (безплатен)
+
+---
+
+## Инсталация и стартиране
+
+### 1. Клонирай или свали проекта
+
+```bash
+git clone https://github.com/Vladimir2010/CalorieApp.git
+cd CalorieApp
+```
+
+### 2. Инсталирай зависимостите на Backend-а
+
+```bash
+npm install
+```
+
+### 3. Инсталирай зависимостите на Frontend-а
+
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+### 4. Създай `.env` файл в главната папка
+
+Създай файл `.env` (в `CalorieApp/`, не в `frontend/`) със следното съдържание:
+
+```env
+PORT=5000
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://[username]:[password]@[cluster].mongodb.net/calorieapp
+JWT_SECRET=some_random_secret_string_here
+GROQ_API_KEY=gsk_...твоя_ключ...
+GEMINI_API_KEY=AIza...твоя_ключ...
+```
+
+### 5. Стартирай приложението
+
+Терминал 1 – Backend:
+```bash
+npm run dev
+```
+
+Терминал 2 – Frontend:
+```bash
+cd frontend
+npm run dev
+```
+
+### 6. Отвори в браузъра
+
+```
+http://localhost:5173
+```
+
+---
+
+## Структура на проекта
+
+```
+CalorieApp/
+├── src/                        # Backend (Node.js/Express)
+│   ├── controllers/            # Логика за всяка операция
+│   ├── models/                 # Mongoose схеми (User, DailyLog, Food)
+│   ├── routes/                 # API маршрути
+│   ├── middleware/             # JWT автентикация
+│   ├── services/               # AI Service (Groq/Gemini)
+│   └── server.js               # Входна точка на сървъра
+│
+├── frontend/                   # Frontend (React/Vite)
+│   └── src/
+│       ├── pages/              # Основни екрани (Home, Camera, Profile...)
+│       ├── components/         # Navbar
+│       ├── i18n.js             # Преводи (BG/EN)
+│       ├── api.js              # Axios конфигурация
+│       └── App.jsx             # Маршрутизация
+│
+├── .env                        # Тайни ключове (НЕ се качва в GitHub!)
+└── README.md                   # Този файл
+```
+
+---
+
+## API Endpoints
+
+| Метод | URL | Описание |
+|---|---|---|
+| POST | `/api/auth/register` | Регистрация |
+| POST | `/api/auth/login` | Влизане |
+| GET | `/api/auth/me` | Данни за текущия потребител |
+| PUT | `/api/auth/me` | Обновяване на профил |
+| GET | `/api/logs/:date` | Дневен дневник за дата |
+| POST | `/api/logs` | Добавяне на храна |
+| DELETE | `/api/logs/:date/:entryId` | Изтриване на запис |
+| POST | `/api/foods` | Добавяне на храна |
+| POST | `/api/ai/analyze` | AI анализ на снимка |
+
+---
+
+## Автори
+
+Разработено от **Владимир Иванов** и **Димитър Христов** за Национална олимпиада по информационни технологии 2026.
